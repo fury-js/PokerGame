@@ -1,0 +1,188 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/mnt/c/Users/chuks/Desktop/Project/PokerGame/contracts/PokerGame.sol": {
+      "lastModificationDate": 1641237785124,
+      "contentHash": "129d605643b18f3acd16649d6f7bf3b4",
+      "sourceName": "contracts/PokerGame.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PokerGame"
+      ]
+    },
+    "/mnt/c/Users/chuks/Desktop/Project/PokerGame/node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol": {
+      "lastModificationDate": 1640838221727,
+      "contentHash": "a6a9d6c1f662e922b82c1ba4d81cdd48",
+      "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeMath"
+      ]
+    },
+    "/mnt/c/Users/chuks/Desktop/Project/PokerGame/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1640838215434,
+      "contentHash": "302d9755e46bc69d7058b0cbe7185e37",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "/mnt/c/Users/chuks/Desktop/Project/PokerGame/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1640450587455,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "/mnt/c/Users/chuks/Desktop/Project/PokerGame/contracts/PokerGameTon.sol": {
+      "lastModificationDate": 1641180327049,
+      "contentHash": "28857d2a5398bbdbe378bbeb6c9c16f7",
+      "sourceName": "contracts/PokerGameTon.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PokerGameTon"
+      ]
+    }
+  }
+}

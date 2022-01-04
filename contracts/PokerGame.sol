@@ -4,89 +4,117 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
+
 import "hardhat/console.sol";
 
 contract PokerGame {
     using SafeMath for uint;
 
+
     uint256 public betAmount = uint256(1 ether).div(10); //0.1
     IERC20 public betToken;
+    string[13] denominations = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"];
+    string[4] suits = ["H", "C", "S", "D"];
+    string[] cards;
+    
+    
+
 
     event Claimed(address sender, address receipient, uint256 amount);
+    event CardHand(string hand);
+    event AllHands(string playerHand, string dealerHand);
 
-    // struct Player {
-
-    // }
-
-    mapping(address => uint256) playerCurrentAmount;
-    mapping(address => string[5]) playerCurrentHand;
-    mapping(address => string[5])  dealerHand;
-    mapping(address => string) ipfsHashOfPlayerDetails;
-    mapping(address => string) ipfsHashOfPlayerCurrentHand;
-
-
-    // mapping(address => Player) public playerDetails;
-
-    // struct Player {
-    //     address payable playerAddress;
-    //     string[3] playerCards;
-    // }
-
-    string[] cards = [
-        "Ace_Clubs", "Two_Clubs", "Three_Clubs", "Four_Clubs", "Five_Clubs", "Six_Clubs", "Seven_Clubs", "Eight_Clubs", "Nine_Clubs", "Ten_Clubs", "Jack_Clubs", "Queen_Clubs", "King_Clubs",
-		"Ace_Diamonds", "Two_Diamonds", "Three_Diamonds", "Four_Diamonds", "Five_Diamonds", "Six_Diamonds", "Seven_Diamonds", "Eight_Diamonds", "Nine_Diamonds", "Ten_Diamonds", "Jack_Diamonds", "Queen_Diamonds", "King_Diamonds",
-		"Ace_Hearts", "Two_Hearts", "Three_Hearts", "Four_Hearts", "Five_Hearts", "Six_Hearts", "Seven_Hearts", "Eight_Hearts", "Nine_Hearts", "Ten_Hearts", "Jack_Hearts", "Queen_Hearts", "King_Hearts",
-		"Ace_Spades", "Two_Spades", "Three_Spades", "Four_Spades", "Five_Spades", "Six_Spades", "Seven_Spades", "Eight_Spades", "Nine_Spades", "Ten_Spades", "Jack_Spades", "Queen_Spades", "King_Spades"
-    ];
-
-    constructor(address _betCurrency) {
-        // console.log("Deploying a Greeter with greeting:", _greeting);
-        betToken = IERC20(_betCurrency);
-    }
-
-    // function dealCard() public {
-    //     Player memory player = Player({
-    //         playerAddress: payable(msg.sender),
-    //         playerCards: ["Ace_Clubs", "Two_Clubs", "Three_Clubs"]
-    //     });
-
-    //     // dealtCards[msg.sender] = player;
-
-    // }
-
-    function getUserDetails() public view returns(uint256, string[5] memory, string memory) {
-        return (playerCurrentAmount[msg.sender], playerCurrentHand[msg.sender], ipfsHashOfPlayerDetails[msg.sender]);
+    struct Hand {
+        string cards;
 
     }
 
-    function generateHand() public returns(string[5] memory) {
-        // generate hand for the player and the dealer
 
+    mapping(address => uint256) public bidAmount;
+    mapping(address => uint256) public playerCurrentAmount;
+    mapping(address => uint256) public dealerCurrentAmount;
+    mapping(address => Hand)  playerCurrentHand;
+    mapping(address => Hand)   dealerHand;
+    mapping(address => string) public ipfsHashOfPlayerDetails;
+
+
+
+    constructor() {
+        
     }
+
+
+
+
+    function getHand() public  {
+        emit AllHands(playerCurrentHand[msg.sender].cards, dealerHand[msg.sender].cards);
+    }
+
+    
+
+    function setAmount(uint256 _amount) public payable {
+        playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].add(_amount);
+        dealerCurrentAmount[msg.sender] = dealerCurrentAmount[msg.sender].add(_amount);
+    }
+
+
+
+    function getApprovedAmount() public view returns(uint256, uint256) {
+        return (playerCurrentAmount[msg.sender], dealerCurrentAmount[msg.sender]);
+    }
+
+
+
+
 
     function placeBet(uint256 _amount) public {
-        require(_amount >= betAmount, "Bet Amount is lower than the required ante");
-        playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].add(_amount);
-        _determineWinner(playerCurrentHand[msg.sender], dealerHand[address(this)]);
-
+        require(_amount > 0, "Bet Amount cannot be 0");
+        playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].sub(_amount);
+        dealerCurrentAmount[msg.sender] = dealerCurrentAmount[msg.sender].sub(_amount);
+        bidAmount[msg.sender] = _amount;
     }
 
-    function _determineWinner(string[5] memory _playerHand, string[5] memory _dealerHand) internal returns(bool) {
-        // needs a function to evaluate both hands to determine who won.
-        // if(_playerHand !== uint) {
-        playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].add(betAmount);
 
-        return true;
-        // };
+
+
+    function rewardWinner(string memory _winner) public {
+        require(bidAmount[msg.sender] > 0, "Bid amount Cannot be 0, Caller must play a game");
+        if((keccak256(abi.encodePacked(_winner)) == keccak256(abi.encodePacked("player"))))
+        {
+            playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].add(bidAmount[msg.sender].mul(2));
+        }
+        if((keccak256(abi.encodePacked(_winner)) == keccak256(abi.encodePacked("dealer")))) {
+            dealerCurrentAmount[msg.sender] = dealerCurrentAmount[msg.sender].add(bidAmount[msg.sender].mul(2));
+        }
+        if((keccak256(abi.encodePacked(_winner)) == keccak256(abi.encodePacked("tie")))) {
+            dealerCurrentAmount[msg.sender] = dealerCurrentAmount[msg.sender].add(bidAmount[msg.sender]);
+            playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].add(bidAmount[msg.sender]);
+        }
+
+        bidAmount[msg.sender] = bidAmount[msg.sender].sub(bidAmount[msg.sender]);
     }
 
-    function claimWinnings() public {
-        uint256 amountToTransfer = playerCurrentAmount[msg.sender];
-        playerCurrentAmount[msg.sender] = playerCurrentAmount[msg.sender].sub(amountToTransfer);
-        require(betToken.transfer(msg.sender, amountToTransfer));
 
-        emit Claimed(address(this), msg.sender, amountToTransfer);
+
+    function updatePlayerDetails(string memory _historyHash) public {
+        ipfsHashOfPlayerDetails[msg.sender] = _historyHash;
     }
 
+
+
+    function getGameDetails() public view returns(uint, uint, string memory, string memory, string memory) {
+        return (
+            playerCurrentAmount[msg.sender],
+            dealerCurrentAmount[msg.sender],
+            playerCurrentHand[msg.sender].cards,
+            dealerHand[msg.sender].cards,
+            ipfsHashOfPlayerDetails[msg.sender]
+        );
+    }
+
+    function setHand(string memory _playerHand, string memory _dealerHand) public {
+        playerCurrentHand[msg.sender].cards = _playerHand;
+        dealerHand[msg.sender].cards = _dealerHand;
+    }
 
 }
